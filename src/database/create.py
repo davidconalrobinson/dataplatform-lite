@@ -18,7 +18,7 @@ def before_create(Base, schema):
 	def before_create(target, connection, **kwargs):
 		sql=text("""
 			CREATE SCHEMA IF NOT EXISTS {schema};
-			CREATE EXTENSION "uuid-ossp";
+			CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 			""".format(schema=schema))
 		connection.execute(sql)
 	event.listen(Base.metadata, 'before_create', before_create)

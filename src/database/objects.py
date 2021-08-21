@@ -22,6 +22,6 @@ for k0, v0 in objects.items():
 	for k1, v1 in v0['columns'].items():
 		object_dict.update({k1: Column(
 			eval(v1['dtype']),
-			comment=v1['comment'],
+			comment=v1['description'],
 			primary_key=v1['primary_key'] if 'primary_key' in v1 else False)})
 	vars()[k0]=type(k0, (Base, ), object_dict)
