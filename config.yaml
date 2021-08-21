@@ -9,12 +9,18 @@ schema: 'test2'
 # Database objects
 objects:
   orders:
-    order_id:
-      dtype: 'String'
-      primary_key: True
-    product:
-      dtype: 'String'
-    quantity:
-      dtype: 'Integer'
-    price_per_unit:
-      dtype: 'Numeric'
+    description: This table contains one row per order
+    columns:
+      order_id:
+        dtype: 'String'
+        comment: 'Unique order identifier'
+        primary_key: True
+      product:
+        comment: 'The product that has been ordered'
+        dtype: 'String'
+      quantity:
+        comment: 'Quantity ordered'
+        dtype: 'Integer'
+      price_per_unit:
+        comment: 'The per-unit price for this product'
+        dtype: 'Numeric'
