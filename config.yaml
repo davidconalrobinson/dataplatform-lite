@@ -62,5 +62,31 @@ objects:
       amount_payable:
         description: 'Amount payable'
         dtype: 'Numeric'
-# Database functions
-functions:
+# Database trigger functions
+trigger_functions:
+  - |
+    CREATE OR REPLACE FUNCTION db.generate_invoice()
+    RETURNS TRIGGER AS
+    $$
+      BEGIN
+        INSERT INTO db.invoices (id, order_id, name, address, amount_payable)
+        SELECT
+          uuid_generate_v1() AS id,
+          orders.id AS order_id,
+          customers.name,
+          customers.address,
+          orders.quantity*orders.price_per_unit AS amount_payable
+        FROM (SELECT NEW.*) orders
+        INNER JOIN db.customers customers
+        ON orders.customer_id = customers.id
+        ON CONFLICT DO NOTHING;
+        RETURN NULL;
+      EXCEPTION WHEN OTHERS THEN
+        RETURN NULL; -- Do nothing.
+      END;
+    $$
+    LANGUAGE PLPGSQL;
+    DROP TRIGGER IF EXISTS generate_invoice ON db.orders;
+    CREATE TRIGGER generate_invoice
+    AFTER INSERT ON db.orders
+    FOR EACH ROW EXECUTE PROCEDURE db.generate_invoice();
