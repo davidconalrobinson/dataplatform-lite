@@ -1,0 +1,4 @@
+certifi==2021.5.30
+greenlet==1.1.1
+SQLAlchemy==1.4.23
+wincertstore==0.2
