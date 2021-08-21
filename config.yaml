@@ -1,0 +1,20 @@
+---
+# Database connection parameters
+username: 'postgres'
+password: 'postgres'
+host: 'localhost'
+port: '5432'
+database: 'xero-case-study-db'
+schema: 'test2'
+# Database objects
+objects:
+  orders:
+    order_id:
+      dtype: 'String'
+      primary_key: True
+    product:
+      dtype: 'String'
+    quantity:
+      dtype: 'Integer'
+    price_per_unit:
+      dtype: 'Numeric'
