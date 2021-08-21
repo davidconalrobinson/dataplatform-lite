@@ -5,22 +5,62 @@ password: 'postgres'
 host: 'localhost'
 port: '5432'
 database: 'xero-case-study-db'
-schema: 'test2'
+schema: 'db'
 # Database objects
 objects:
+  customers:
+    description: This table contains one row per customer
+    columns:
+      id:
+        dtype: 'String'
+        description: 'Unique customer identifier'
+        primary_key: True
+      name:
+        description: 'Name of customer'
+        dtype: 'String'
+      phone_no:
+        description: 'Customer phone number'
+        dtype: 'String'
+      address:
+        description: 'Address of customer'
+        dtype: 'String'
   orders:
     description: This table contains one row per order
     columns:
-      order_id:
+      id:
         dtype: 'String'
-        comment: 'Unique order identifier'
+        description: 'Unique order identifier'
         primary_key: True
+      customer_id:
+        dtype: 'String'
+        description: 'Unique customer identifier'
       product:
-        comment: 'The product that has been ordered'
+        description: 'The product that has been ordered'
         dtype: 'String'
       quantity:
-        comment: 'Quantity ordered'
+        description: 'Quantity ordered'
         dtype: 'Integer'
       price_per_unit:
-        comment: 'The per-unit price for this product'
+        description: 'The per-unit price for this product'
         dtype: 'Numeric'
+  invoices:
+    description: This table contains one row per invoice
+    columns:
+      id:
+        dtype: 'String'
+        description: 'Unique invoice identifier'
+        primary_key: True
+      order_id:
+        dtype: 'String'
+        description: 'Unique order identifier'
+      name:
+        description: 'Name of customer'
+        dtype: 'String'
+      address:
+        description: 'Address of customer'
+        dtype: 'String'
+      amount_payable:
+        description: 'Amount payable'
+        dtype: 'Numeric'
+# Database functions
+functions:
