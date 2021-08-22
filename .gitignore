@@ -127,3 +127,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Output from src/viz/generate_kedro_viz_json.py
+src/viz/viz.json
