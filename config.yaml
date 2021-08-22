@@ -14,54 +14,68 @@ objects:
       id:
         dtype: 'String'
         description: 'Unique customer identifier'
+        pii: False
         primary_key: True
       name:
         description: 'Name of customer'
         dtype: 'String'
+        pii: True
       phone_no:
         description: 'Customer phone number'
         dtype: 'String'
+        pii: True
       address:
         description: 'Address of customer'
         dtype: 'String'
+        pii: True
   orders:
     description: This table contains one row per order
     columns:
       id:
         dtype: 'String'
         description: 'Unique order identifier'
+        pii: False
         primary_key: True
       customer_id:
         dtype: 'String'
         description: 'Unique customer identifier'
+        pii: False
       product:
         description: 'The product that has been ordered'
         dtype: 'String'
+        pii: False
       quantity:
         description: 'Quantity ordered'
         dtype: 'Integer'
+        pii: False
       price_per_unit:
         description: 'The per-unit price for this product'
         dtype: 'Numeric'
+        pii: False
   invoices:
     description: This table contains one row per invoice
     columns:
       id:
         dtype: 'String'
         description: 'Unique invoice identifier'
+        pii: False
         primary_key: True
       order_id:
         dtype: 'String'
         description: 'Unique order identifier'
+        pii: False
       name:
         description: 'Name of customer'
         dtype: 'String'
+        pii: True
       address:
         description: 'Address of customer'
         dtype: 'String'
+        pii: True
       amount_payable:
         description: 'Amount payable'
         dtype: 'Numeric'
+        pii: False
 # Database trigger functions
 trigger_functions:
   - |
