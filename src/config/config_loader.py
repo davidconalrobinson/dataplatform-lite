@@ -8,7 +8,7 @@ import yaml
 
 
 # Read YAML file.
-with open('config.yaml', 'r') as stream:
+with open('src/config/config.yaml', 'r') as stream:
     config=yaml.safe_load(stream)
 
 

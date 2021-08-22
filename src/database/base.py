@@ -8,7 +8,7 @@ from sqlalchemy import create_engine, event
 from sqlalchemy.sql import text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from src.config_loader import username, password, host, port, database
+from src.config.config_loader import username, password, host, port, database
 
 
 # Create session.

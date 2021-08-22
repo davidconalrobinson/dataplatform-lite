@@ -7,7 +7,7 @@ Create database.
 from src.database.base import *
 from src.database.objects import *
 from src.helpers.helpers import sequence_in
-from src.config_loader import schema, trigger_functions, objects
+from src.config.config_loader import schema, trigger_functions, objects
 
 
 def before_create(Base, schema):

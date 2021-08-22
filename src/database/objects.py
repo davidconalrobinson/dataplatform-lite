@@ -9,7 +9,7 @@ Each class maps to a database table using SQL alchemy ORM.
 from sqlalchemy import *
 from sqlalchemy.dialects.postgresql import ARRAY
 from src.database.base import Base
-from src.config_loader import schema, objects
+from src.config.config_loader import schema, objects
 
 
 # Loop through objects and generate a class for each.
