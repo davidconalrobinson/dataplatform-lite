@@ -4,6 +4,7 @@ Create database.
 
 
 # Imports.
+import time
 from src.database.base import *
 from src.database.objects import *
 from src.helpers.helpers import sequence_in
@@ -81,4 +82,18 @@ def create_all(Base, schema, engine):
 
 
 if __name__ == '__main__':
-	create_all(Base, schema, engine)
+	while True:
+		try:
+			# Ping connection.
+			with engine.connect() as connection:
+				result=connection.execute('SELECT True AS ping')
+				for row in result:
+					ping=row['ping']
+			break
+		except Exception as e:
+			print(e)
+			print('waiting for infra before deploying db src code', flush=True)
+			time.sleep(10)
+	if ping:
+		create_all(Base, schema, engine)
+		print('db src code deployed', flush=True)

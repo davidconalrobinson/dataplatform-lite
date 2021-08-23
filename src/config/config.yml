@@ -2,9 +2,9 @@
 # Database connection parameters
 username: 'postgres'
 password: 'postgres'
-host: 'localhost'
+host: 'db_infra'
 port: '5432'
-database: 'xero-case-study-db'
+database: 'dataplatform-lite-db'
 schema: 'db'
 # Database objects
 objects:

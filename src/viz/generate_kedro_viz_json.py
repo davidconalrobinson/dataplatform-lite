@@ -4,6 +4,7 @@ Opens a visualisation of the data pipeline using kedro-viz.
 
 
 # Imports.
+import time
 import json
 import pandas as pd
 from src.database.base import engine
@@ -97,4 +98,18 @@ def export_kedro_viz_dict(engine):
 
 
 if __name__ == '__main__':
-	export_kedro_viz_dict(engine)
+	while True:
+		try:
+			# Ping connection.
+			with engine.connect() as connection:
+				result=connection.execute('SELECT True AS ping')
+				for row in result:
+					ping=row['ping']
+			break
+		except Exception as e:
+			print(e)
+			print('waiting for infra before generating viz json', flush=True)
+			time.sleep(10)
+	if ping:
+		export_kedro_viz_dict(engine)
+		print('viz json generated', flush=True)

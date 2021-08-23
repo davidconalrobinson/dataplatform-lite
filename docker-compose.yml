@@ -1,0 +1,21 @@
+version: "2.2"
+services:
+  db_infra:
+    container_name: dataplatform-lite-db-infra
+    build:
+      context: .
+      dockerfile: Dockerfile_db_infra
+    ports:
+      - 5432:5432
+  db_src:
+    container_name: dataplatform-lite-db-src
+    build:
+      context: .
+      dockerfile: Dockerfile_db_src
+  viz:
+    container_name: dataplatform-lite-viz
+    build:
+      context: .
+      dockerfile: Dockerfile_viz
+    ports:
+      - 4141:4141
