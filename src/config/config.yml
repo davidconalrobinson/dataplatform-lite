@@ -10,6 +10,8 @@ schema: 'db'
 objects:
   customers:
     description: This table contains one row per customer
+    api:
+      - post
     columns:
       id:
         dtype: 'String'
@@ -30,6 +32,9 @@ objects:
         pii: True
   orders:
     description: This table contains one row per order
+    api:
+      - get
+      - post
     columns:
       id:
         dtype: 'String'
@@ -54,6 +59,8 @@ objects:
         pii: False
   invoices:
     description: This table contains one row per invoice
+    api:
+      - get
     columns:
       id:
         dtype: 'String'
