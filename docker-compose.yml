@@ -5,8 +5,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile_db_infra
-    ports:
-      - 5432:5432
   db_src:
     container_name: dataplatform-lite-db-src
     build:
