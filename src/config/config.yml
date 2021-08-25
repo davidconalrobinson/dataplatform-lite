@@ -5,7 +5,6 @@ password: 'postgres'
 host: 'db_infra'
 port: '5432'
 database: 'dataplatform-lite-db'
-schema: 'db'
 # Database objects
 objects:
   customers:

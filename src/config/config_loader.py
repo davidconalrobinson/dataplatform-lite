@@ -21,6 +21,6 @@ password=config['password']
 host=config['host']
 port=config['port']
 database=config['database']
-schema=config['schema']
+schema='db'
 objects=config['objects']
 trigger_functions=config['trigger_functions']
