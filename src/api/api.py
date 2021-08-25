@@ -7,6 +7,7 @@ Define RESTful API for interfacing with dataplatform using fastapi.
 from fastapi import FastAPI, Depends
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
+from src.api.auth import *
 from src.config.config_loader import objects
 from src.database.base import engine
 from src.database.objects import *
@@ -35,7 +36,7 @@ def create_post(table, columns_primary, columns):
 	Create post endpoint programmatically (for data ingestion).
 	"""
 	@app.post('/{}/'.format(table))
-	def ingest(body: eval('body_{}'.format(table)), params: eval('params_{}'.format(table))=Depends()):
+	async def ingest(body: eval('body_{}'.format(table)), params: eval('params_{}'.format(table))=Depends(), current_user: User=Depends(get_current_active_user)):
 		body_dict={}
 		for column in columns_primary:
 			body_dict.update({column: getattr(params, column)})
@@ -53,7 +54,7 @@ def create_get(table, columns_primary, columns):
 	Create get endpoint programmatically (for data consumption).
 	"""
 	@app.get('/{}/'.format(table))
-	def consume(params: eval('params_{}'.format(table))=Depends()):
+	async def consume(params: eval('params_{}'.format(table))=Depends(), current_user: User = Depends(get_current_active_user)):
 		filter={}
 		for column in columns_primary:
 			filter.update({column: getattr(params, column)})
@@ -64,6 +65,22 @@ def create_get(table, columns_primary, columns):
 		for column in columns_primary+columns:
 			result_dict.update({column: getattr(result, column)})
 		return(result_dict)
+
+
+@app.post("/token/", response_model=Token)
+async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
+    user = authenticate_user(fake_users_db, form_data.username, form_data.password)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = create_access_token(
+        data={"sub": user.username}, expires_delta=access_token_expires
+    )
+    return {"access_token": access_token, "token_type": "bearer"}
 
 
 # Loop through tables and columns to create endpoints.

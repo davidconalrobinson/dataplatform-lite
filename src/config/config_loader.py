@@ -19,8 +19,10 @@ with open('src/config/config.yml', 'r') as stream:
 username=config['username']
 password=config['password']
 host=config['host']
-port=config['port']
+port=5432
 database=config['database']
 schema='db'
 objects=config['objects']
 trigger_functions=config['trigger_functions']
+secret_key=config['secret_key']
+users=config['users']

@@ -3,8 +3,22 @@
 username: 'postgres'
 password: 'postgres'
 host: 'db_infra'
-port: '5432'
 database: 'dataplatform-lite-db'
+# API secrets and users
+secret_key: 09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7
+users:
+  peter:
+    username: 'peter'
+    full_name: 'Peter Parker'
+    email: 'peterparker@marvel.com'
+    hashed_password: '$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW'
+    disabled: False
+  diana:
+    username: 'diana'
+    full_name: 'Diana Prince'
+    email: 'dianaprince@dc.com'
+    hashed_password: '$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW'
+    disabled: False
 # Database objects
 objects:
   customers:
