@@ -12,6 +12,13 @@ services:
     build:
       context: .
       dockerfile: Dockerfile_db_src
+  api:
+    container_name: dataplatform-lite-api
+    build:
+      context: .
+      dockerfile: Dockerfile_api
+    ports:
+      - 8000:8000
   viz:
     container_name: dataplatform-lite-viz
     build:
