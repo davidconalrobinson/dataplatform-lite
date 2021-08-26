@@ -46,9 +46,9 @@ def after_create(Base, schema, objects, trigger_functions=[]):
 						""".format(schema, table_name, column_name, column_metadata['description'], column_metadata['pii'])]
 				# Insert table metadata.
 				sql+=["""
-					INSERT INTO metadata.tables (schema_name, table_name, description, pii)
-					VALUES ('{}', '{}', '{}', {});
-					""".format(schema, table_name, table_metadata['description'], table_pii)]
+					INSERT INTO metadata.tables (schema_name, table_name, description, access_tier, pii)
+					VALUES ('{}', '{}', '{}', {}, {});
+					""".format(schema, table_name, table_metadata['description'], table_metadata['access_tier'], table_pii)]
 		if trigger_functions:
 			sql+=trigger_functions
 			for trigger_function in trigger_functions:

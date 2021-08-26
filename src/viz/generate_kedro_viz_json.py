@@ -65,6 +65,9 @@ def generate_kedro_viz_dict(engine):
 	# Create nodes object.
 	nodes=[]
 	for i, table in tables.iterrows():
+		tags=[]
+		tags+=['access_tier_{}'.format(table['access_tier'])]
+		tags+=['pii'] if table['pii'] else []
 		nodes+=[{
 			'dataset_type': table['fq_table'],
 			'full_name': table['fq_table'],
@@ -73,7 +76,7 @@ def generate_kedro_viz_dict(engine):
 			'modular_pipelines': [],
 			'name': table['fq_table'],
 			'pipelines': ['__default__'],
-			'tags': ['pii'] if table['pii'] else [],
+			'tags': tags,
 			'type': 'data'
 		}]
 	for i, trigger_function in trigger_functions.iterrows():
@@ -121,7 +124,11 @@ def generate_kedro_viz_dict(engine):
 	# Create selected pipeline object.
 	selected_pipeline='__default__'
 	# Creates tags object.
-	tags=[{'id': 'pii', 'name': 'Personally Identifiable Information'}]
+	tags=[
+		{'id': 'pii', 'name': 'Personally Identifiable Information'},
+		{'id': 'access_tier_1', 'name': 'Access Tier: 1'},
+		{'id': 'access_tier_2', 'name': 'Access Tier: 2'},
+		{'id': 'access_tier_3', 'name': 'Access Tier: 3'}]
 	# Create kedro viz dict
 	kedro_viz_dict={}
 	for key in ['edges', 'layers', 'modular_pipelines', 'nodes', 'pipelines', 'selected_pipeline', 'tags']:

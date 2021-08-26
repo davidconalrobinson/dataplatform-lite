@@ -39,6 +39,7 @@ class tables(Base):
 	schema_name=Column(String, comment='Schema name', primary_key=True)
 	table_name=Column(String, comment='Table name', primary_key=True)
 	description=Column(String, comment='table description')
+	access_tier=Column(Integer, comment='Access control tier')
 	pii=Column(Boolean, comment='Personally identifiable information flag')
 
 

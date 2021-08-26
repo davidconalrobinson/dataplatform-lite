@@ -37,6 +37,7 @@ class User(BaseModel):
     email: Optional[str] = None
     full_name: Optional[str] = None
     disabled: Optional[bool] = None
+    access_tier: int
 
 
 class UserInDB(User):
