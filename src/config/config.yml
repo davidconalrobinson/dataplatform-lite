@@ -13,18 +13,21 @@ users:
     email: 'peterparker@marvel.com'
     hashed_password: '$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW'
     disabled: False
+    access_tier: 1
   diana:
     username: 'diana'
     full_name: 'Diana Prince'
     email: 'dianaprince@dc.com'
     hashed_password: '$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW'
     disabled: False
+    access_tier: 2
 # Database objects
 objects:
   customers:
     description: This table contains one row per customer
     api:
       - post
+    access_tier: 1
     columns:
       id:
         dtype: 'String'
@@ -48,6 +51,7 @@ objects:
     api:
       - get
       - post
+    access_tier: 2
     columns:
       id:
         dtype: 'String'
@@ -74,6 +78,7 @@ objects:
     description: This table contains one row per invoice
     api:
       - get
+    access_tier: 1
     columns:
       id:
         dtype: 'String'
