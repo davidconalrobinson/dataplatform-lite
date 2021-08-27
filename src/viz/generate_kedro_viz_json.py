@@ -50,14 +50,15 @@ def generate_kedro_viz_dict(engine):
 		edges+=[{'source': trigger_function['trigger_function_name'], 'target': trigger_function['target_table']}]
 	for k0, v0 in objects.items():
 		table=k0
-		if 'get' in v0['api']:
-			source=tables['fq_table'][tables['table_name'] == table].iloc[0]
-			target='GET /{}/'.format(table)
-			edges+=[{'source': source, 'target': target}]
-		if 'post' in v0['api']:
-			source='POST /{}/'.format(table)
-			target=tables['fq_table'][tables['table_name'] == table].iloc[0]
-			edges+=[{'source': source, 'target': target}]
+		if 'api' in v0:
+			if 'get' in v0['api']:
+				source=tables['fq_table'][tables['table_name'] == table].iloc[0]
+				target='GET /{}/'.format(table)
+				edges+=[{'source': source, 'target': target}]
+			if 'post' in v0['api']:
+				source='POST /{}/'.format(table)
+				target=tables['fq_table'][tables['table_name'] == table].iloc[0]
+				edges+=[{'source': source, 'target': target}]
 	# Create layers object.
 	layers=['ingest', 'db', 'consume']
 	# Create modular pipelines object.
@@ -93,32 +94,33 @@ def generate_kedro_viz_dict(engine):
 		}]
 	for k0, v0 in objects.items():
 		table=k0
-		if 'get' in v0['api']:
-			name='GET /{}/'.format(table)
-			nodes+=[{
-				'full_name': name,
-				'id': name,
-				'layer': 'consume',
-				'modular_pipelines': [],
-				'name': name,
-				'parameters': {},
-				'pipelines': ['__default__'],
-				'tags': [],
-				'type': 'task'
-			}]
-		if 'post' in v0['api']:
-			name='POST /{}/'.format(table)
-			nodes+=[{
-				'full_name': name,
-				'id': name,
-				'layer': 'ingest',
-				'modular_pipelines': [],
-				'name': name,
-				'parameters': {},
-				'pipelines': ['__default__'],
-				'tags': [],
-				'type': 'task'
-			}]
+		if 'api' in v0:
+			if 'get' in v0['api']:
+				name='GET /{}/'.format(table)
+				nodes+=[{
+					'full_name': name,
+					'id': name,
+					'layer': 'consume',
+					'modular_pipelines': [],
+					'name': name,
+					'parameters': {},
+					'pipelines': ['__default__'],
+					'tags': [],
+					'type': 'task'
+				}]
+			if 'post' in v0['api']:
+				name='POST /{}/'.format(table)
+				nodes+=[{
+					'full_name': name,
+					'id': name,
+					'layer': 'ingest',
+					'modular_pipelines': [],
+					'name': name,
+					'parameters': {},
+					'pipelines': ['__default__'],
+					'tags': [],
+					'type': 'task'
+				}]
 	# Create pipelines object.
 	pipelines=[{'id': '__default__', 'name': 'Default'}]
 	# Create selected pipeline object.

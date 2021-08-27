@@ -101,7 +101,8 @@ for k0, v0 in objects.items():
 			columns_primary+=[k1]
 		else:
 			columns+=[k1]
-	if 'get' in v0['api']:
-		create_get(table, columns_primary, columns, access_tier)
-	if 'post' in v0['api']:
-		create_post(table, columns_primary, columns, access_tier)
+	if 'api' in v0:
+		if 'get' in v0['api']:
+			create_get(table, columns_primary, columns, access_tier)
+		if 'post' in v0['api']:
+			create_post(table, columns_primary, columns, access_tier)

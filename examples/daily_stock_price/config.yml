@@ -1,0 +1,109 @@
+---
+# Database connection parameters
+username: 'postgres'
+password: 'postgres'
+host: 'db_infra'
+database: 'dataplatform-lite-db'
+# API secrets and users
+secret_key: 09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7
+users:
+  peter:
+    username: 'peter'
+    full_name: 'Peter Parker'
+    email: 'peterparker@marvel.com'
+    hashed_password: '$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW'
+    disabled: False
+    access_tier: 1
+# Database objects
+objects:
+  raw_daily_price:
+    description: This table contains one row per raw message
+    api:
+      - post
+    access_tier: 1
+    columns:
+      ticker:
+        dtype: 'String'
+        description: 'Stock ticker'
+        pii: False
+        primary_key: True
+      data:
+        description: 'Raw data'
+        dtype: 'String'
+        pii: False
+  enriched_daily_price:
+    description: This table contains one row per enriched
+    api:
+      - get
+    access_tier: 1
+    columns:
+      ticker:
+        dtype: 'String'
+        description: 'Stock ticker'
+        pii: False
+        primary_key: True
+      date:
+        dtype: 'String'
+        description: 'Date'
+        pii: False
+        primary_key: True
+      open:
+        description: 'Opening price'
+        dtype: 'Numeric'
+        pii: False
+      high:
+        description: 'High price'
+        dtype: 'Numeric'
+        pii: False
+      low:
+        description: 'Low price'
+        dtype: 'Numeric'
+        pii: False
+      close:
+        description: 'Closing price'
+        dtype: 'Numeric'
+        pii: False
+      volume:
+        description: 'Volume traded'
+        dtype: 'Numeric'
+        pii: False
+# Database trigger functions
+trigger_functions:
+  - |
+    CREATE OR REPLACE FUNCTION db.enrich()
+    RETURNS TRIGGER AS
+    $$
+      BEGIN
+        INSERT INTO db.enriched_daily_price (ticker, date, open, high, low, close, volume)
+        SELECT
+          ticker,
+          --TO_DATE(date, 'YYYY-MM-DD') AS date,
+          date,
+          CAST(data -> '1.open' #>> '{}' AS FLOAT) AS open,
+          CAST(data -> '2.high' #>> '{}' AS FLOAT) AS high,
+          CAST(data -> '3.low' #>> '{}' AS FLOAT) AS low,
+          CAST(data -> '4.close' #>> '{}' AS FLOAT) AS close,
+          CAST(data -> '5.volume' #>> '{}' AS FLOAT) AS volume
+        FROM (
+          SELECT
+            ticker,
+            date,
+            data::json -> 'TimeSeries(Daily)' -> date AS data
+          FROM
+            (
+            SELECT
+              ticker,
+              data,
+              json_object_keys(data::json -> 'TimeSeries(Daily)') as date
+            FROM (SELECT NEW.*) raw) a) b
+        ON CONFLICT DO NOTHING;
+        RETURN NULL;
+      EXCEPTION WHEN OTHERS THEN
+        RETURN NULL; -- Do nothing.
+      END;
+    $$
+    LANGUAGE PLPGSQL;
+    DROP TRIGGER IF EXISTS enrich ON db.raw_daily_price;
+    CREATE TRIGGER enrich
+    AFTER INSERT ON db.raw_daily_price
+    FOR EACH ROW EXECUTE PROCEDURE db.enrich();

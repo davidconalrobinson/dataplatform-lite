@@ -7,7 +7,7 @@ Each class maps to a database table using SQL alchemy ORM.
 
 # Imports.
 from sqlalchemy import *
-from sqlalchemy.dialects.postgresql import ARRAY
+from sqlalchemy.dialects.postgresql import ARRAY, JSON
 from src.database.base import Base
 from src.config.config_loader import schema, objects
 
