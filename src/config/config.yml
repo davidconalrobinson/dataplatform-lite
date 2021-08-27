@@ -5,127 +5,29 @@ password: 'postgres'
 host: 'db_infra'
 database: 'dataplatform-lite-db'
 # API secrets and users
-secret_key: 09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7
+secret_key: <API secret key. Run "openssl rand -hex 32" to generate this>
 users:
-  peter:
-    username: 'peter'
-    full_name: 'Peter Parker'
-    email: 'peterparker@marvel.com'
-    hashed_password: '$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW'
-    disabled: False
-    access_tier: 1
-  diana:
-    username: 'diana'
-    full_name: 'Diana Prince'
-    email: 'dianaprince@dc.com'
-    hashed_password: '$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW'
-    disabled: False
-    access_tier: 2
+  <name for this user>:
+    username: '<a user name>'
+    full_name: '<full name>'
+    email: '<email>'
+    hashed_password: '<Hashed password. Follow these instructiong to generate: https://fastapi.tiangolo.com/tutorial/security/oauth2-jwt/#hash-and-verify-the-passwords>'
+    disabled: <True or False. Must be True in order for this user to access>
+    access_tier: <1, 2, or 3. 1 is highest access level, 3 is lowest.>
 # Database objects
 objects:
-  customers:
-    description: This table contains one row per customer
+  <name for this object>:
+    description: <object description>
     api:
-      - post
-    access_tier: 1
+      - <get or post. Use this to automatically generate API endpoints.>
+    access_tier: <1, 2 or 3. This sets the access level>
     columns:
-      id:
-        dtype: 'String'
-        description: 'Unique customer identifier'
-        pii: False
-        primary_key: True
-      name:
-        description: 'Name of customer'
-        dtype: 'String'
-        pii: True
-      phone_no:
-        description: 'Customer phone number'
-        dtype: 'String'
-        pii: True
-      address:
-        description: 'Address of customer'
-        dtype: 'String'
-        pii: True
-  orders:
-    description: This table contains one row per order
-    api:
-      - get
-      - post
-    access_tier: 2
-    columns:
-      id:
-        dtype: 'String'
-        description: 'Unique order identifier'
-        pii: False
-        primary_key: True
-      customer_id:
-        dtype: 'String'
-        description: 'Unique customer identifier'
-        pii: False
-      product:
-        description: 'The product that has been ordered'
-        dtype: 'String'
-        pii: False
-      quantity:
-        description: 'Quantity ordered'
-        dtype: 'Integer'
-        pii: False
-      price_per_unit:
-        description: 'The per-unit price for this product'
-        dtype: 'Numeric'
-        pii: False
-  invoices:
-    description: This table contains one row per invoice
-    api:
-      - get
-    access_tier: 1
-    columns:
-      id:
-        dtype: 'String'
-        description: 'Unique invoice identifier'
-        pii: False
-        primary_key: True
-      order_id:
-        dtype: 'String'
-        description: 'Unique order identifier'
-        pii: False
-      name:
-        description: 'Name of customer'
-        dtype: 'String'
-        pii: True
-      address:
-        description: 'Address of customer'
-        dtype: 'String'
-        pii: True
-      amount_payable:
-        description: 'Amount payable'
-        dtype: 'Numeric'
-        pii: False
+      <column name>:
+        dtype: <Data type - must be a sqlalchemy data type https://docs.sqlalchemy.org/en/14/core/types.html>
+        description: <Column description>
+        pii: <True or False>
+        primary_key: <True or False>
 # Database trigger functions
 trigger_functions:
   - |
-    CREATE OR REPLACE FUNCTION db.generate_invoice()
-    RETURNS TRIGGER AS
-    $$
-      BEGIN
-        INSERT INTO db.invoices (id, order_id, name, address, amount_payable)
-        SELECT
-          uuid_generate_v1() AS id,
-          orders.id AS order_id,
-          customers.name,
-          customers.address,
-          orders.quantity*orders.price_per_unit AS amount_payable
-        FROM (SELECT NEW.*) orders
-        INNER JOIN db.customers customers
-        ON orders.customer_id = customers.id
-        ON CONFLICT DO NOTHING;
-        RETURN NULL;
-      EXCEPTION WHEN OTHERS THEN
-        RETURN NULL; -- Do nothing.
-      END;
-    $$
-    LANGUAGE PLPGSQL;
-    DROP TRIGGER IF EXISTS generate_invoice ON db.orders;
-    CREATE TRIGGER generate_invoice
-    AFTER INSERT ON db.orders
-    FOR EACH ROW EXECUTE PROCEDURE db.generate_invoice();
+    <SQL trigger functions go here. Refer to examples/\*/config.yml for some examples of this. Full documentation is available here: https://www.postgresql.org/docs/12/plpgsql-trigger.html>
